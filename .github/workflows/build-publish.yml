@@ -11,7 +11,7 @@ jobs:
      runs-on: ubuntu-latest
      env:
       OIDC_AUDIENCE: 'jfrog-github'
-      PLATFORM_REPO: 'umac-npm'
+      PLATFORM_REPO: 'ashritha-npm-npm'
      defaults:
       run:
         working-directory: ./package
