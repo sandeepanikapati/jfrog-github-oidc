@@ -30,26 +30,6 @@ jobs:
            oidc-provider-name: san-git-intergation
            oidc-audience: jfrog-github
 
-       - name: Set CLI Config
-         run: jf npm-config --global=true --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
-           
-       - name: Install Dependencies
-         run: jf npm install
-           
-       - name: Run tests
-         run: npm test
-         
-       - name: Publish
-         run: jf npm publish
-         
-       - name: Publish Build info With JFrog CLI
-         run: |
-          # Collect environment variables for the build
-          jf rt build-collect-env
-          # Collect VCS details from git and add them to the build
-          jf rt build-add-git
-          # Publish build info
-          jf rt build-publish
        - name: Fetch Access Token from Artifactory
          id: fetch_access_token
          env:
@@ -69,3 +49,25 @@ jobs:
            ID_TOKEN=$(curl -sLS -H "User-Agent: actions/oidc-client" -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=jfrog-github" | jq .value | tr -d '"')
            echo "ID_TOKEN=${ID_TOKEN}" >> $GITHUB_OUTPUT
+           
+       - name: Set CLI Config
+         run: jf npm-config --global=true --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
+          
+       - name: Install Dependencies
+         run: jf npm install
+           
+       - name: Run tests
+         run: npm test
+         
+       - name: Publish
+         run: jf npm publish
+         
+       - name: Publish Build info With JFrog CLI
+         run: |
+          # Collect environment variables for the build
+          jf rt build-collect-env
+          # Collect VCS details from git and add them to the build
+          jf rt build-add-git
+          # Publish build info
+          jf rt build-publish
+
