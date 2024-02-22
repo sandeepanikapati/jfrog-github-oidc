@@ -58,11 +58,12 @@ jobs:
            ACCESS_TOKEN=$(curl \
            -X POST \
            -H "Content-type: application/json" \
-           https://example.jfrog.io/access/api/v1/oidc/token \
+           https://incloudmaster.jfrog.io/access/api/v1/oidc/token \
            -d \
            "{\"grant_type\": \"urn:ietf:params:oauth:grant-type:token-exchange\", \"subject_token_type\":\"urn:ietf:params:oauth:token-type:id_token\", \"subject_token\": \"$ID_TOKEN\", \"provider_name\": \"san-git-intergation\"}" | jq .access_token | tr -d '"')
            echo ACCESS_TOKEN=$ACCESS_TOKEN >> $GITHUB_OUTPUT
-       - name: Get ID Token (@actions/core method)
+           
+       - name: Get ID Token
          uses: actions/github-script@v7
          id: idtoken
          with:
