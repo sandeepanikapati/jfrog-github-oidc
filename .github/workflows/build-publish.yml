@@ -56,7 +56,7 @@ jobs:
          env:
            ID_TOKEN: ${{ env.ACCESS_TOKEN }}         
          run: |
-           curl -sLS  -H "Authorization: Bearer $ID_TOKEN" -X GET  "https://incloudmaster.jfrog.io/artifactory/api/system/version"
+           curl -sLS  -H "Authorization: Bearer $ACCESS_TOKEN" -X GET  "https://incloudmaster.jfrog.io/artifactory/api/system/version"
          
        - name: Set CLI Config
          run: jf npm-config --global=true --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
