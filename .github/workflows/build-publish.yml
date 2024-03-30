@@ -36,7 +36,7 @@ jobs:
        - name: Get System Version (cURL method)
          run: |
            curl -sLS -H "User-Agent: actions/oidc-client" -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" -X GET \
-           "https://incloudmaster.jfrog.io/artifactory/api/system/version" | jq .value | tr -d '"'
+           "https://incloudmaster.jfrog.io/artifactory/api/system/version"
            printenv
      
        - name: Install Dependencies
