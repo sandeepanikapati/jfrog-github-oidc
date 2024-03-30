@@ -26,6 +26,9 @@ jobs:
          uses: jfrog/setup-jfrog-cli@v3
          env:  
            JF_URL: ${{ secrets.JF_URL }}
+         with:
+           oidc-provider-name: san-git-intergation
+           oidc-audience: jfrog-github
         
        - name: Set CLI Config
          run: jf npm-config --global=true --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
