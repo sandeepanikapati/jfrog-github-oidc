@@ -53,6 +53,8 @@ jobs:
            echo "ID_TOKEN=${ID_TOKEN}" >> $GITHUB_OUTPUT
 
        - name: Server version 
+         env:
+           ID_TOKEN: ${{ env.ACCESS_TOKEN }}         
          run: |
            curl -sLS  -H "Authorization: Bearer $ID_TOKEN" -X GET  "https://incloudmaster.jfrog.io/artifactory/api/system/version"
          
