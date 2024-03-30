@@ -32,6 +32,14 @@ jobs:
         
        - name: Set CLI Config
          run: jf npm-config --global=true --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
+
+       - name: Get System Version (cURL method)
+         run: |
+           ID_TOKEN=$(curl -sLS -H "User-Agent: actions/oidc-client" -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" -X GET \
+           "https://incloudmaster.jfrog.io/artifactory/api/system/version")
+           echo "ID_TOKEN=${ID_TOKEN}" >> $GITHUB_OUTPUT
+           
+
           
        - name: Install Dependencies
          run: jf npm install
