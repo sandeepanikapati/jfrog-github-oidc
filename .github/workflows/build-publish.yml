@@ -31,6 +31,8 @@ jobs:
            oidc-audience: jfrog-github
          
        - name: Set CLI Config
+         env:
+          ACCESS_TOKEN: ${{ ACCESS_TOKEN}}
          run: jf npm-config --global=true --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
           
        - name: Install Dependencies
