@@ -5,31 +5,76 @@ on: push
 # https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers#adding-permissions-settings
 permissions:
   id-token: write
-env:
-  OIDC_AUDIENCE: 'jfrog-github'
-  PLATFORM_REPO: 'ashritha-npm-npm'
-jobs:
-  deploy:
-    name: JCA OIDC Generic Push Simple
-    runs-on: [self-hosted, elastic, linux, default]
 
-    steps:
-      - name: Generate 1MB File
-        run: |
-          head -c 1MB </dev/urandom >dummy
-          ls -alih dummy
-          
-      - name: Setup JFrog CLI With OIDC
-        uses: jfrog/setup-jfrog-cli@v4
-        env:
-          JF_URL: ${{ secrets.JF_URL }}
-        with:
+jobs:
+  build:
+     runs-on: ubuntu-latest
+     env:
+      OIDC_AUDIENCE: 'jfrog-github'
+      PLATFORM_REPO: 'ashritha-npm-npm'
+     defaults:
+      run:
+        working-directory: ./package
+     steps:
+       - name: Checkout
+         uses: actions/checkout@v3
+              
+       - name: Setup Node npm
+         uses: actions/setup-node@v3
+   
+       - name: Setup JFrog CLI
+         uses: jfrog/setup-jfrog-cli@v3
+         env:  
+           JF_URL: ${{ secrets.JF_URL }}
+         with:
            oidc-provider-name: san-git-intergation
            oidc-audience: jfrog-github
 
-      - name: Push Generic Artifact
-        env:
-          ACCESS_TOKEN: ${{ env.ACCESS_TOKEN}}
-        run: |
-          ls -lart
-          jf rt upload --url ${{ secrets.JF_URL }}/artifactory dummy $PLATFORM_REPO
+       - name: Fetch Access Token from Artifactory
+         id: fetch_access_token
+         env:
+           ID_TOKEN: ${{ steps.idtoken.outputs.id_token }}
+         run: |
+           ACCESS_TOKEN=$(curl \
+           -X POST \
+           -H "Content-type: application/json" \
+           https://incloudmaster.jfrog.io/access/api/v1/oidc/token \
+           -d \
+           "{\"grant_type\": \"urn:ietf:params:oauth:grant-type:token-exchange\", \"subject_token_type\":\"urn:ietf:params:oauth:token-type:id_token\", \"subject_token\": \"$ID_TOKEN\", \"provider_name\": \"san-git-intergation\"}" | jq .access_token | tr -d '"')
+           echo ACCESS_TOKEN=$ACCESS_TOKEN >> $GITHUB_OUTPUT
+           export ACCESS_TOKEN=${ACCESS_TOKEN}
+           printenv
+           
+       - name: Get ID Token (cURL method)
+         id: idtoken
+         run: |
+           ID_TOKEN=$(curl -sLS -H "User-Agent: actions/oidc-client" -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+           "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=jfrog-github" | jq .value | tr -d '"')
+           echo "ID_TOKEN=${ID_TOKEN}" >> $GITHUB_OUTPUT
+
+       - name: Server version 
+         env:
+           ID_TOKEN: ${{ env.ACCESS_TOKEN }}         
+         run: |
+           curl -sLS  -H "Authorization: Bearer $ACCESS_TOKEN" -X GET  "https://incloudmaster.jfrog.io/artifactory/api/system/version"
+         
+       - name: Set CLI Config
+         run: jf npm-config --global=true --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
+          
+       - name: Install Dependencies
+         run: jf npm install
+           
+       - name: Run tests
+         run: npm test
+         
+       - name: Publish
+         run: jf npm publish
+         
+       - name: Publish Build info With JFrog CLI
+         run: |
+          # Collect environment variables for the build
+          jf rt build-collect-env
+          # Collect VCS details from git and add them to the build
+          jf rt build-add-git
+          # Publish build info
+          jf rt build-publish
