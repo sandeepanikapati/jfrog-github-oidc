@@ -5,17 +5,15 @@ on: push
 # https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers#adding-permissions-settings
 permissions:
   id-token: write
-
+env:
+  OIDC_AUDIENCE: 'jfrog-github'
+  PLATFORM_REPO: 'ashritha-npm-npm'
 jobs:
-  build:
-     runs-on: ubuntu-latest
-     env:
-      OIDC_AUDIENCE: 'jfrog-github'
-      PLATFORM_REPO: 'ashritha-npm-npm'
-     defaults:
-      run:
-        working-directory: ./package
-     steps:
+  deploy:
+    name: JCA OIDC Generic Push Simple
+    runs-on: [self-hosted, elastic, linux, default]
+
+    steps:
       - name: Generate 1MB File
         run: |
           head -c 1MB </dev/urandom >dummy
