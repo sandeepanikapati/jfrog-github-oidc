@@ -28,4 +28,4 @@ jobs:
         env:
           ACCESS_TOKEN: ${{ env.ACCESS_TOKEN}}
         run: |
-          jf rt upload --url ${{ secrets.JF_URL }}/artifactory packages/package.json $PLATFORM_REPO
+          jf rt upload --url ${{ secrets.JF_URL }}/artifactory package/package.json $PLATFORM_REPO
