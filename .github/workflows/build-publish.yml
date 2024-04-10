@@ -28,4 +28,5 @@ jobs:
         env:
           ACCESS_TOKEN: ${{ env.ACCESS_TOKEN}}
         run: |
+          ls -lart
           jf rt upload --url ${{ secrets.JF_URL }}/artifactory * $PLATFORM_REPO
