@@ -32,23 +32,7 @@ jobs:
          
        - name: Set CLI Config
          env:
-          ACCESS_TOKEN: ${{ ACCESS_TOKEN}}
-         run: jf npm-config --global=true --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
+           ACCESS_TOKEN: ${{ ACCESS_TOKEN}}
+         run: jf rt upload package.json $PLATFORM_REPO
           
-       - name: Install Dependencies
-         run: jf npm install
-           
-       - name: Run tests
-         run: npm test
-         
-       - name: Publish
-         run: jf npm publish
-         
-       - name: Publish Build info With JFrog CLI
-         run: |
-          # Collect environment variables for the build
-          jf rt build-collect-env
-          # Collect VCS details from git and add them to the build
-          jf rt build-add-git
-          # Publish build info
-          jf rt build-publish
+
