@@ -16,11 +16,6 @@ jobs:
       run:
         working-directory: ./package
      steps:
-      - name: Generate 1MB File
-        run: |
-          head -c 1MB </dev/urandom >dummy-$(hostname)
-          ls -alih dummy-$(hostname)
-
       - name: Setup JFrog CLI With OIDC
         uses: jfrog/setup-jfrog-cli@v4
         env:
@@ -33,4 +28,4 @@ jobs:
         env:
           ACCESS_TOKEN: ${{ env.ACCESS_TOKEN}}
         run: |
-          jf rt upload --url ${{ secrets.JF_URL }}/artifactory dummy-$(hostname) $PLATFORM_REPO
+          jf rt upload --url ${{ secrets.JF_URL }}/artifactory packages/package.json $PLATFORM_REPO
