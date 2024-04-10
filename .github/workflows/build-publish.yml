@@ -31,8 +31,6 @@ jobs:
            oidc-audience: jfrog-github
          
        - name: Set CLI Config
-         env:
-           ACCESS_TOKEN: ${{ ACCESS_TOKEN}}
          run: jf rt upload package.json $PLATFORM_REPO
           
 
