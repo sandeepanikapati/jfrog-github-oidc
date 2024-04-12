@@ -9,6 +9,6 @@ issues:
   regexp: (.+-\[0-9\]+)\\s-\\s(.+)
   keyGroupIndex: 1
   summaryGroupIndex: 2
-  trackerUrl: https://sandeepani1.atlassian.net/
+  trackerUrl: https://sandeepani1.atlassian.net/issues
   aggregate: true
   aggregationStatus: RELEASED
