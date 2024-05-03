@@ -11,7 +11,7 @@ jobs:
      runs-on: ubuntu-latest
      env:
       OIDC_AUDIENCE: 'jfrog-github'
-      PLATFORM_REPO: 'npm'
+      PLATFORM_REPO: 'sand-npm'
      defaults:
       run:
         working-directory: ./package
