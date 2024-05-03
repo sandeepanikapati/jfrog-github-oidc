@@ -32,10 +32,21 @@ jobs:
            
        - name: Set CLI Config
          run: jf npm-config --global=true --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
-
-       - name: Deploy to artifactory
-         env:
-           JF_ACCESS_TOKEN: ${{ env.ACCESS_TOKEN }}
-           JF_URL: ${{ secrets.JF_URL }}
+          
+       - name: Install Dependencies
+         run: jf npm install
+           
+       - name: Run tests
+         run: npm test
+         
+       - name: Publish
+         run: jf npm publish
+         
+       - name: Publish Build info With JFrog CLI
          run: |
-           curl -H "Authorization: Bearer $JF_ACCESS_TOKEN"  -XGET "https://incloudmaster.jfrog.io/artifactory/api/system/version"
+          # Collect environment variables for the build
+          jf rt build-collect-env
+          # Collect VCS details from git and add them to the build
+          jf rt build-add-git
+          # Publish build info
+          jf rt build-publish
