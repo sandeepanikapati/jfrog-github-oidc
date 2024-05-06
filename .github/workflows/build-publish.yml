@@ -32,6 +32,7 @@ jobs:
            
        - name: Set CLI Config
          run: jf npm-config --global=true --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
+              printenv
           
        - name: Install Dependencies
          run: jf npm install
