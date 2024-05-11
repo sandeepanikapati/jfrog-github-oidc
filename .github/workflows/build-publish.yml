@@ -15,7 +15,10 @@ jobs:
       PLATFORM_REPO: 'sand-npm'
       
      steps:
-   
+       - name: Logs
+         run: |
+          printenv
+
        - name: Setup JFrog CLI
          uses: jfrog/setup-jfrog-cli@v4
          env:  
