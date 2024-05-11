@@ -26,5 +26,6 @@ jobs:
            
        - name: Download
          uses: actions/checkout@v4
+         
        - name: Publish
-         run: jf rt u README.md maven-tools-local
+         run: jf rt u README.md sand-npm
