@@ -32,4 +32,4 @@ jobs:
          
        - name: Publish
          run: jf rt u README.md sand-npm
-              printenv
+
