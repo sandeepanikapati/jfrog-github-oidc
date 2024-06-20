@@ -16,6 +16,7 @@ jobs:
      container:
       image: incloudmaster.jfrog.io/docker-remote/node:lts-alpine
       credentials:
+        username: ${{ secrets.JFROG_USER }}
         password: ${{ secrets.JFROG_ACCESS_TOKEN }}
         
      steps:
