@@ -13,7 +13,11 @@ jobs:
      env:
       OIDC_AUDIENCE: 'jfrog-github'
       PLATFORM_REPO: 'sand-npm'
-      
+     container:
+      image: incloudmaster.jfrog.io/docker-remote/node:lts-alpine
+      credentials:
+        username: ${{ vars.JFROG_USER }}
+        password: ${{ secrets.JFROG_ACCESS_TOKEN }}     
      steps:
        - name: Logs
          run: |
