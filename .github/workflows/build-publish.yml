@@ -36,7 +36,7 @@ jobs:
          image: incloudmaster.jfrog.io/docker-remote/node:lts-alpine
          credentials:
            username: ${{ secrets.JFROG_USER }}
-           password: $ID_TOKEN
+           password: $ACCESS_TOKEN
         steps:
           - name: Download
             run: printenv
