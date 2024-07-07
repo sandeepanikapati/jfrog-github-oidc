@@ -35,6 +35,8 @@ jobs:
          credentials:
            username: ${{ secrets.JFROG_USER }}
            password: ${ACCESS_TOKEN}
+        steps:
+          - name: Download
+            uses: actions/checkout@v4
 
-         
 
