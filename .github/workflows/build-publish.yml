@@ -8,7 +8,7 @@ permissions:
   contents: read 
 jobs:
     lint:
-        name: Code
+        name: lint
         runs-on: ubuntu-latest
         steps:
           - name: Get id token
@@ -26,7 +26,7 @@ jobs:
                printenv
 
     test:
-        name: Test
+        name: test
         needs: lint
         runs-on: ubuntu-latest
         env:
