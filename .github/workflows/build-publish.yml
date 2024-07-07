@@ -30,7 +30,7 @@ jobs:
         env:
          OIDC_AUDIENCE: 'jfrog-github'
          PLATFORM_REPO: 'sand-npm'
-         ID_TOKEN: ${{ env.ACCESS_TOKEN }}
+         ACCESS_TOKEN: ${{ env.ACCESS_TOKEN }}
         container:
          image: incloudmaster.jfrog.io/docker-remote/node:lts-alpine
          credentials:
