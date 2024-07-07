@@ -25,9 +25,6 @@ jobs:
           echo "ACCESS_TOKEN=${ACCESS_TOKEN}" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build
-        run: |
-          make build
       - name: Deploy to artifactory
         env:
           ID_TOKEN: ${{ env.ACCESS_TOKEN }}
