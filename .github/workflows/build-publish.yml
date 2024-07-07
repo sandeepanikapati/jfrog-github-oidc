@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Deploy to artifactory
         env:
-          ID_TOKEN: ${{ env.ACCESS_TOKEN }}
+          ACCESS_TOKEN: ${{ env.ACCESS_TOKEN }}
           POC_URL: ${{ secrets.JF_URL }}
         run: |
           curl -H "Authorization: Bearer $ACCESS_TOKEN" -T README.md "${POC_URL}/artifactory/manu-generic-local/README.md"
