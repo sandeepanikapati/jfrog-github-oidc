@@ -8,8 +8,8 @@ jobs:
     steps:
       - name: Set environment variable
         run: |
-             echo "MY_ENV_VAR=hello" >> $GITHUB_ENV
-             echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
+          echo "MY_ENV_VAR=hello" >> $GITHUB_ENV
+          echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
 
   job2:
     runs-on: ubuntu-latest
