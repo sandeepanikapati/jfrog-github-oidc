@@ -49,5 +49,5 @@ jobs:
       - name: Download
         run: |
           echo "$RESPONSE"
-          echo "Variable MY_VAR is $MY_VAR"
+          echo "Variable MY_VAR is $ACCESS_TOKEN"
           printenv
