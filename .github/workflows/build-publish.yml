@@ -22,3 +22,7 @@ jobs:
         run: |
           echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
           printenv
+      - name: Print environment variable
+        run: |
+          echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
+          printenv
