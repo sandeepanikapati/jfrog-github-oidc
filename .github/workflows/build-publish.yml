@@ -1,4 +1,4 @@
-name: Pass Environment Variables Between Jobs
+name: CI
 
 on: [push]
 
@@ -7,17 +7,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set environment variable
-        run: echo "MY_ENV_VAR=hello" > $GITHUB_ENV
-      - name: Print environment variable
-        run: |
-          echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
-          printenv
+        run: echo "MY_VAR=my_value" > my_env_file.txt
+      - name: Upload environment file
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-env
+          path: my_env_file.txt
 
   job2:
-    runs-on: ubuntu-latest
     needs: job1
+    runs-on: ubuntu-latest
     steps:
-      - name: Print environment variable
+      - name: Download environment file
+        uses: actions/download-artifact@v3
+        with:
+          name: my-env
+      - name: Load environment variable
         run: |
-          echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
-          printenv
+          MY_VAR=$(cat my_env_file.txt)
+          echo "MY_VAR=$MY_VAR" >> $GITHUB_ENV
+      - name: Print MY_VAR
+        run: echo $MY_VAR
