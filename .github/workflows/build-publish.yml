@@ -40,7 +40,7 @@ jobs:
               ID_TOKEN: ${{ env.ACCESS_TOKEN }}
               POC_URL: ${{ secrets.JF_URL }}
             run: |
-              curl -H "Authorization: Bearer $ACCESS_TOKEN" -T README.md "https://incloudmaster.jfrog.io/artifactory/manu-generic-local/README.md"
+              curl -H "Authorization: Bearer $ACCESS_TOKEN" -L -O "https://incloudmaster.jfrog.io/artifactory/manu-generic-local/README.md"
 
 
     test:
