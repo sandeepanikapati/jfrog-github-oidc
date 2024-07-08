@@ -5,13 +5,22 @@ on: [push]
 jobs:
   job1:
     runs-on: ubuntu-latest
+    outputs:
+      var1: ${{ steps.set-variable.outputs.test }}
     steps:
+      - uses: actions/checkout@v2
+      - name: Set test variable
+        id: set-variable
+        run: |
+            echo "::set-output name=test::abc"
+            
       - name: Set environment variable
         run: |
           echo "MY_ENV_VAR=hello" >> $GITHUB_ENV
       - name: Print environment variable
         run: |
           echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
+          echo "::set-output name=test::123"
           printenv
       - name: Output runner information
         run: |
@@ -21,11 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: job1
     steps:
-      - name: Print environment variable
+      - uses: actions/checkout@v2
+      - name: Read exported variable
         run: |
-          echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
-          printenv
-      - name: Output runner information
-        run: |
-          echo "Runner OS: $RUNNER_OS"
-          echo "Runner label: $RUNNER_LABEL"
+          echo "OUTPUT: ${{needs.setup-job.outputs.var1}}"
