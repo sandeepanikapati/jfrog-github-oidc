@@ -33,7 +33,6 @@ jobs:
               RESPONSE=$(curl -s -o response.json -w "%{http_code}" -X POST -H "Content-type: application/json" https://incloudmaster.jfrog.io/access/api/v1/oidc/token -d \
               '{"grant_type": "urn:ietf:params:oauth:grant-type:token-exchange","subject_token_type":"urn:ietf:params:oauth:token-type:id_token","subject_token": "${{ env.ID_TOKEN }}","provider_name": "${{ env.OIDC_PROVIDER }}"}')
               echo "API Response:"
-              echo "$RESPONSE" 
               echo "MY_VAR=hello" >> $GITHUB_ENV
               
           - name: Deploy to artifactory
