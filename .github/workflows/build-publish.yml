@@ -35,7 +35,7 @@ jobs:
               echo "API Response:"
               echo "$RESPONSE" 
               echo "MY_VAR=hello" >> $GITHUB_ENV
-              echo "Variable MY_VAR is $MY_VAR"
+              printenv
               
           - name: Deploy to artifactory
             env:
@@ -63,4 +63,4 @@ jobs:
               echo "$RESPONSE"
               echo "The value of ACCESS_TOKEN is "${{ env.ID_TOKEN }}""
               echo "The value of ACCESS_TOKEN is "${{ env.ACCESS_TOKEN }}""
-              echo "The variable MY_VAR is $MY_VAR"
+              printenv
