@@ -34,8 +34,7 @@ jobs:
               '{"grant_type": "urn:ietf:params:oauth:grant-type:token-exchange","subject_token_type":"urn:ietf:params:oauth:token-type:id_token","subject_token": "${{ env.ID_TOKEN }}","provider_name": "${{ env.OIDC_PROVIDER }}"}')
               echo "API Response:"
               echo "$RESPONSE" 
-              echo "MY_VAR=hello" >> $GITHUB_ENV
-              printenv
+              echo "MY_VAR=hello" >> $GITHUB_EN
               
           - name: Deploy to artifactory
             env:
@@ -44,6 +43,7 @@ jobs:
               MY_VAR: ${{ env.MY_VAR }}
             run: |
               curl -H "Authorization: Bearer $ACCESS_TOKEN" -L -O "https://incloudmaster.jfrog.io/artifactory/manu-generic-local/README.md"
+              printenv
 
 
     test:
@@ -53,7 +53,7 @@ jobs:
         env:
          OIDC_AUDIENCE: 'jfrog-github'
          PLATFORM_REPO: 'sand-npm'
-         MY_VAR: ${{ env.MY_VAR }}
+
         container:
          image: incloudmaster.jfrog.io/docker-remote/node:lts-alpine
          credentials:
