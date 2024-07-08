@@ -17,15 +17,7 @@ jobs:
       - name: Set environment variable
         run: |
           echo "MY_ENV_VAR=hello" >> $GITHUB_ENV
-      - name: Print environment variable
-        run: |
-          echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
-          echo "::set-output name=test::123"
-          printenv
-      - name: Output runner information
-        run: |
-          echo "Runner OS: $RUNNER_OS"
-          echo "Runner label: $RUNNER_LABEL"
+
   job2:
     runs-on: ubuntu-latest
     needs: job1
