@@ -58,5 +58,6 @@ jobs:
         steps:
           - name: Download
             run: |
+              echo "$RESPONSE"
               echo "The value of ACCESS_TOKEN is $ACCESS_TOKEN"
 
