@@ -13,7 +13,10 @@ jobs:
         run: |
           echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
           printenv
-
+      - name: Output runner information
+        run: |
+          echo "Runner OS: $RUNNER_OS"
+          echo "Runner label: $RUNNER_LABEL"
   job2:
     runs-on: ubuntu-latest
     needs: job1
@@ -22,7 +25,7 @@ jobs:
         run: |
           echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
           printenv
-      - name: Print environment variable
+      - name: Output runner information
         run: |
-          echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
-          printenv
+          echo "Runner OS: $RUNNER_OS"
+          echo "Runner label: $RUNNER_LABEL"
