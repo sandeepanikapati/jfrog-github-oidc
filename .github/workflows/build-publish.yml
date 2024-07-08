@@ -44,7 +44,8 @@ jobs:
           MY_VAR: '${{ env.MY_VAR }}'
         run: |
           curl -H "Authorization: Bearer $ACCESS_TOKEN" -T README.md "${POC_URL}/artifactory/manu-generic-local/README.md"
-          echo "Variable MY_VAR is $MY_VAR" 
+          echo "Variable MY_VAR is $MY_VAR"
+          printenv
   build:
     runs-on: ubuntu-latest
     needs: setup
