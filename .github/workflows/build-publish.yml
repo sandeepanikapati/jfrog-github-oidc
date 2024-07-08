@@ -35,6 +35,7 @@ jobs:
               echo "API Response:"
               echo "$RESPONSE" 
               echo "MY_VAR=hello" >> $GITHUB_ENV
+              echo "Variable MY_VAR is $MY_VAR"
               
           - name: Deploy to artifactory
             env:
