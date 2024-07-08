@@ -45,7 +45,7 @@ jobs:
               MY_VAR: ${{ env.MY_VAR }}
             run: |
               curl -H "Authorization: Bearer $ACCESS_TOKEN" -L -O "https://incloudmaster.jfrog.io/artifactory/manu-generic-local/README.md"
-              printenv
+              echo "Variable MY_VAR is $MY_VAR"
 
 
     test:
