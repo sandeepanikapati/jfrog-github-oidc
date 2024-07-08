@@ -34,7 +34,10 @@ jobs:
               '{"grant_type": "urn:ietf:params:oauth:grant-type:token-exchange","subject_token_type":"urn:ietf:params:oauth:token-type:id_token","subject_token": "${{ env.ID_TOKEN }}","provider_name": "${{ env.OIDC_PROVIDER }}"}')
               echo "API Response:"
               echo "MY_VAR=hello" >> $GITHUB_ENV
-              
+
+          - name: Print variable
+            run: echo "Variable MY_VAR is $MY_VAR"
+            
           - name: Deploy to artifactory
             env:
               ID_TOKEN: ${{ env.ACCESS_TOKEN }}
