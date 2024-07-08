@@ -9,6 +9,9 @@ jobs:
       - name: Set environment variable
         run: |
           echo "MY_VAR=my_value" >> $GITHUB_ENV
+          
+      - name: Export environment variable
+        run: |
           export MY_VAR="${MY_VAR}"
 
   job2:
