@@ -1,6 +1,8 @@
 name: "JFrog-GitHub NPM Publish OIDC Integration"
-on: push
-
+on: 
+  push:
+    branches:
+      - '*'
 # This is required as person12345678n
 # https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers#adding-permissions-settings
 permissions:
