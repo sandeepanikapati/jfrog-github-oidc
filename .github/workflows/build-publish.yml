@@ -3,7 +3,7 @@ name: Example Workflow
 on:
   push:
     branches:
-      - main
+      - '*'
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -16,24 +16,21 @@ jobs:
           
       - name: Exchange token with access
         env:
-          ID_TOKEN: '${{env.ID_TOKEN}}'
-          ARTIFACTORY_URL: 'https://incloudmaster.jfrog.io'
+         ID_TOKEN: ${{env.ID_TOKEN}}
+         JFROG_PLATFORM_URL: https://incloudmaster.jfrog.io
         run: |
-          ACCESS_TOKEN=$(curl -XPOST -H "Content-Type: application/json" "https://incloudmaster.jfrog.io/access/api/v1/oidc/token" -d "{\"grant_type\": \"urn:ietf:params:oauth:grant-type:token-exchange\",
-          \"subject_token_type\":\"urn:ietf:params:oauth:token-type:id_token\",
-          \"subject_token\": \"${ID_TOKEN}\", \"provider_name\":
-          \"san-git-intergation\"}" | jq .access_token | tr -d '"')
-          echo "ACCESS_TOKEN=${ACCESS_TOKEN}" >> $GITHUB_ENV
+             ACCESS_TOKEN=$(curl -XPOST -H "Content-Type: application/json" "https://incloudmaster.jfrog.io/access/api/v1/oidc/token" -d "{\"grant_type\": \"urn:ietf:params:oauth:grant-type:token-exchange\", \"subject_token_type\":\"urn:ietf:params:oauth:token-type:id_token\", \"subject_token\": \"${ID_TOKEN}\", \"provider_name\": \"san-git-intergation\"}" | jq .access_token | tr -d '"')
+                    echo "ACCESS_TOKEN=${ACCESS_TOKEN}" >> $GITHUB_ENV
           
       - name: list token
         env:
-          OIDC_AUDIENCE: jfrog-github
-          OIDC_PROVIDER: san-git-intergation
+         OIDC_AUDIENCE: 'jfrog-github'
+         OIDC_PROVIDER: 'san-git-intergation'
         run: |
-          RESPONSE=$(curl -s -o response.json -w "%{http_code}" -X POST -H "Content-type: application/json" https://incloudmaster.jfrog.io/access/api/v1/oidc/token -d \
-            '{"grant_type": "urn:ietf:params:oauth:grant-type:token-exchange","subject_token_type":"urn:ietf:params:oauth:token-type:id_token","subject_token": "${{ env.ID_TOKEN }}","provider_name": "${{ env.OIDC_PROVIDER }}"}')
-          echo "API Response:"
-          echo "MY_VAR=hello" >> $GITHUB_ENV
+            RESPONSE=$(curl -s -o response.json -w "%{http_code}" -X POST -H "Content-type: application/json" https://incloudmaster.jfrog.io/access/api/v1/oidc/token -d \
+              '{"grant_type": "urn:ietf:params:oauth:grant-type:token-exchange","subject_token_type":"urn:ietf:params:oauth:token-type:id_token","subject_token": "${{ env.ID_TOKEN }}","provider_name": "${{ env.OIDC_PROVIDER }}"}')
+              echo "API Response:"
+              echo "$RESPONSE" 
           
       - name: Print variable
         run: echo "Variable MY_VAR is $MY_VAR"
@@ -57,5 +54,8 @@ jobs:
         username: '${{ secrets.JFROG_USER }}'
         password: '${{ secrets.PASSWORD }}'
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
+      - name: Download
+        run: |
+          echo "$RESPONSE"
+          echo "Variable MY_VAR is $MY_VAR"
+          printenv
