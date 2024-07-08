@@ -65,6 +65,4 @@ jobs:
           - name: Download
             run: |
               echo "$RESPONSE"
-              echo "The value of ACCESS_TOKEN is "${{ env.ID_TOKEN }}""
-              echo "The value of ACCESS_TOKEN is "${{ env.ACCESS_TOKEN }}""
-              printenv
+              echo "Variable MY_VAR is $MY_VAR"
