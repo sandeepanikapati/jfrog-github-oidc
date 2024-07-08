@@ -1,16 +1,14 @@
 name: "JFrog-GitHub NPM Publish OIDC Integration"
-on: 
-  push:
-    branches:
-      - '*'
+on: [push]
 # This is required as person12345678n
 # https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers#adding-permissions-settings
-permissions:
-  id-token: write
-  contents: read 
+
 jobs:
     lint:
         name: lint
+        permissions:
+          id-token: write
+          contents: read 
         runs-on: ubuntu-latest
         steps:
           - name: Get id token
@@ -46,8 +44,6 @@ jobs:
             run: |
               curl -H "Authorization: Bearer $ACCESS_TOKEN" -L -O "https://incloudmaster.jfrog.io/artifactory/manu-generic-local/README.md"
               echo "Variable MY_VAR is $MY_VAR"
-
-
     test:
         name: test
         needs: lint
