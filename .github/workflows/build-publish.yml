@@ -9,6 +9,7 @@ jobs:
       - name: Set environment variable
         run: |
           echo "MY_ENV_VAR=hello" >> $GITHUB_ENV
+          printenv
       - name: Print environment variable
         run: echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
 
@@ -17,4 +18,6 @@ jobs:
     needs: job1
     steps:
       - name: Print environment variable
-        run: echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
+        run: |
+          echo "The environment variable MY_ENV_VAR is $MY_ENV_VAR"
+          printenv
