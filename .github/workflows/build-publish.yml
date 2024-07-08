@@ -38,8 +38,6 @@ jobs:
               
       - name: Deploy to artifactory
         env:
-          OIDC_AUDIENCE: 'jfrog-github'
-          OIDC_PROVIDER: 'san-git-intergation'
           ID_TOKEN: ${{ env.ACCESS_TOKEN }}
           POC_URL: ${{ secrets.JF_URL }}
         run: |
