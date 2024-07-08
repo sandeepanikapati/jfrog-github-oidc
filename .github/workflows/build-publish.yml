@@ -26,16 +26,7 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
-      - name: list token
-        env:
-         OIDC_AUDIENCE: 'jfrog-github'
-         OIDC_PROVIDER: 'san-git-intergation'
-        run: |
-            RESPONSE=$(curl -s -o response.json -w "%{http_code}" -X POST -H "Content-type: application/json" https://incloudmaster.jfrog.io/access/api/v1/oidc/token -d \
-              '{"grant_type": "urn:ietf:params:oauth:grant-type:token-exchange","subject_token_type":"urn:ietf:params:oauth:token-type:id_token","subject_token": "${{ env.ID_TOKEN }}","provider_name": "${{ env.OIDC_PROVIDER }}"}')
-              echo "API Response:"
-              echo "$RESPONSE" 
-              
+        
       - name: Deploy to artifactory
         env:
           ID_TOKEN: ${{ env.ACCESS_TOKEN }}
