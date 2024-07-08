@@ -55,6 +55,7 @@ jobs:
           "https://incloudmaster.jfrog.io/artifactory/manu-generic-local/README.md"
 
           echo "Variable MY_VAR is $MY_VAR"
+          printenv
   test:
     name: test
     runs-on: ubuntu-latest
