@@ -25,6 +25,15 @@ jobs:
       - name: Logs
         run: |
           printenv
+      - name: Decode JWT and extract sub claim
+        run: |
+
+          JWT_TOKEN="${{ secrets.MY_JWT }}"
+          PAYLOAD=$(echo $JWT_TOKEN | cut -d '.' -f 2)
+          SUB_CLAIM=$(echo $PAYLOAD | base64 --decode | jq -r .sub)
+          echo "sub claim: $SUB_CLAIM"
+        env:
+          JWT_TOKEN: ${{ secrets.MY_JWT }}
 
       - name: Initialize Docker container
         run: |
