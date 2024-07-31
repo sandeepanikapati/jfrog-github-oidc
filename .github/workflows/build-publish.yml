@@ -28,7 +28,7 @@ jobs:
       - name: Decode JWT and extract sub claim
         run: |
 
-          JWT_TOKEN="${ID_TOKEN}"
+          JWT_TOKEN="${{env.ID_TOKEN}}"
           PAYLOAD=$(echo $JWT_TOKEN | cut -d '.' -f 2)
           SUB_CLAIM=$(echo $PAYLOAD | base64 --decode | jq -r .sub)
           echo "sub claim: $SUB_CLAIM"
