@@ -27,7 +27,7 @@ jobs:
          env:  
            JF_URL: ${{ secrets.JF_URL }}
          with:
-           oidc-provider-name: san-git-intergation1
+           oidc-provider-name: san-git-integration1
 
            
        - name: Set CLI Config
