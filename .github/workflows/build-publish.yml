@@ -1,7 +1,7 @@
 name: "JFrog-GitHub NPM Publish OIDC Integration"
 on: push
 
-# This is required as person
+# This is required as per
 # https://docs.github.com/en/actions/deployment/securiy-hardening-your-deployments/configuring-openid-connectn-cloud--providers#adding-permissions-settinkgs
 permissions:
   id-token: write
