@@ -30,7 +30,22 @@ jobs:
            oidc-provider-name: san-git-intergation
            oidc-audience: jfrog-github
 
-           
+       - name: Log in to JFrog Docker registry
+         run: |
+          docker login ${{ secrets.JFROG_URL }}/ \
+            -u ${{ secrets.JFROG_USERNAME }} --password ${{ secrets.JFROG_PASSWORD }}
+            
+       - name: Pull Docker image
+         run: |
+          docker pull hts2-girigithub-oci-local.jfrog.io/ociimage:1.0
+
+       - name: tag Docker image
+         run: |
+          docker tag hts2-girigithub-oci-local.jfrog.io/ociimage:1.1 hts2-girigithub-oci-local.jfrog.io/myapp:1.0
+
+       - name: push Docker image
+         run: |
+          docker push hts2-girigithub-oci-local.jfrog.io/myapp:1.1           
        - name: Set CLI Config
          run: jf npm-config --global=true --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
 
