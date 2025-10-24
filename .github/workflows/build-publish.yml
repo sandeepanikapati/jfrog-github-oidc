@@ -32,7 +32,7 @@ jobs:
 
        - name: Log in to JFrog Docker registry
          run: |
-          docker login ${{ secrets.JFROG_URL }}/ \
+          docker login ${{ secrets.JF_DOCKER_URL }}/ \
             -u ${{ secrets.JFROG_USERNAME }} --password ${{ secrets.JFROG_PASSWORD }}
             
        - name: Pull Docker image
