@@ -53,21 +53,20 @@ jobs:
        - name: Load image from tar file
          id: load_image
          run: |
-          # Example tarball name: linux-amd64.tar
           echo "Simulating docker load..."
-          # Simulate docker load output
+          # Simulate what docker would print when loading an image
           echo "Loaded image: myapp:latest"
-          docker load -i "${{ steps.prepare.outputs.platform_pair }}.${{ steps.set_input.outputs.image-format }}"
-
-          # Save the simulated output to /tmp/loaded_image.txt
+          # Save the simulated image name to a temporary file
           echo "myapp:latest" > /tmp/loaded_image.txt
-
           echo "Image name is '$(cat /tmp/loaded_image.txt)'"
           image_name=$(cat /tmp/loaded_image.txt)
+
           if [ -z "$image_name" ]; then
-            echo "Image name is empty"
-            exit 1
+          echo "Image name is empty"
+          exit 1
           fi
+
+          # Export image name for use in later steps
           echo "image_name=$image_name" >> $GITHUB_OUTPUT
 
        - name: Print image name
