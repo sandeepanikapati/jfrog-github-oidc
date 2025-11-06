@@ -34,20 +34,21 @@ jobs:
          run: |
           docker login ${{ secrets.JF_DOCKER_URL }} -u ${{ secrets.JFROG_USERNAME }} --password ${{ secrets.JFROG_PASSWORD }}
 
+       - name: Pull Docker image
+         run: |
+          docker pull hts2-girigithub-oci-local.jfrog.io/ociimage:1.0
+          
        - name: GAR Tag and Push
          run: |
           image_platform_pair="hts2-girigithub-oci-local.jfrog.io/ociimage:v1.2.3-linux-amd64"
           echo "Tagging and pushing primary image: $image_platform_pair"
-          docker tag ociimage:build-temp "$image_platform_pair"
+          docker tag ociimage:1.0 "$image_platform_pair"
           docker push "$image_platform_pair"
           for tag in latest stable; do
           echo "Tagging and pushing additional tag: $tag"
            docker tag "$image_platform_pair" "hts2-girigithub-oci-local.jfrog.io/ociimage:$tag-linux-amd64"
            docker push "hts2-girigithub-oci-local.jfrog.io/ociimage:$tag-linux-amd64"
           done
-       - name: Pull Docker image
-         run: |
-          docker pull hts2-girigithub-oci-local.jfrog.io/ociimage:1.0
 
        - name: tag Docker image
          run: |
