@@ -57,6 +57,7 @@ jobs:
           echo "Simulating docker load..."
           # Simulate docker load output
           echo "Loaded image: myapp:latest"
+          docker load -i "${{ steps.prepare.outputs.platform_pair }}.${{ steps.set_input.outputs.image-format }}"
 
           # Save the simulated output to /tmp/loaded_image.txt
           echo "myapp:latest" > /tmp/loaded_image.txt
