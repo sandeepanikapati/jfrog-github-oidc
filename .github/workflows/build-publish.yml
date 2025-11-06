@@ -34,9 +34,7 @@ jobs:
          run: |
           docker login ${{ secrets.JF_DOCKER_URL }} -u ${{ secrets.JFROG_USERNAME }} --password ${{ secrets.JFROG_PASSWORD }}
 
-       - name: Pull Docker image
-         run: |
-          docker pull hts2-girigithub-oci-local.jfrog.io/ociimage:1.0
+
 
        - name: Prepare test values
          id: prepare
