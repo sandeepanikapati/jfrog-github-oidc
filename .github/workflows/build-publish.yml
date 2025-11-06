@@ -76,7 +76,7 @@ jobs:
          run: |
           image_platform_pair="hts2-girigithub-oci-local.jfrog.io/ociimage:v1.2.3-linux-amd64"
           echo "Tagging and pushing primary image: $image_platform_pair"
-          docker tag "$image_name" "$image_platform_pair"
+          docker tag myapp:latest "$image_platform_pair"
           docker push "$image_platform_pair"
           for tag in latest stable; do
           echo "Tagging and pushing additional tag: $tag"
