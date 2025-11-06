@@ -71,7 +71,11 @@ jobs:
 
        - name: Print image name
          run: echo "Loaded image is ${{ steps.load_image.outputs.image_name }}"
-         
+       - name: Create dummy Docker image
+         run: |
+          echo "FROM alpine:3.18" > Dockerfile
+          echo "CMD echo Hello from dummy image" >> Dockerfile
+          docker build -t myapp:latest .        
        - name: GAR Tag and Push
          run: |
           image_platform_pair="hts2-girigithub-oci-local.jfrog.io/ociimage:v1.2.3-linux-amd64"
