@@ -37,7 +37,41 @@ jobs:
        - name: Pull Docker image
          run: |
           docker pull hts2-girigithub-oci-local.jfrog.io/ociimage:1.0
-          
+
+       - name: Prepare test values
+         id: prepare
+         run: |
+          echo "platform_pair=linux-amd64" >> $GITHUB_OUTPUT
+
+      # Example of using an input (simulate your inputs.image-format)
+       - name: Set image format input
+         id: set_input
+         run: |
+          echo "image-format=tar" >> $GITHUB_OUTPUT
+
+      # Step: Load Docker image from tar file
+       - name: Load image from tar file
+         id: load_image
+         run: |
+          # Example tarball name: linux-amd64.tar
+          echo "Simulating docker load..."
+          # Simulate docker load output
+          echo "Loaded image: myapp:latest"
+
+          # Save the simulated output to /tmp/loaded_image.txt
+          echo "myapp:latest" > /tmp/loaded_image.txt
+
+          echo "Image name is '$(cat /tmp/loaded_image.txt)'"
+          image_name=$(cat /tmp/loaded_image.txt)
+          if [ -z "$image_name" ]; then
+            echo "Image name is empty"
+            exit 1
+          fi
+          echo "image_name=$image_name" >> $GITHUB_OUTPUT
+
+       - name: Print image name
+         run: echo "Loaded image is ${{ steps.load_image.outputs.image_name }}"
+         
        - name: GAR Tag and Push
          run: |
           image_platform_pair="hts2-girigithub-oci-local.jfrog.io/ociimage:v1.2.3-linux-amd64"
