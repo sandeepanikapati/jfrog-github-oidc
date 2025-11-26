@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  # ---------------------------------------------------------
-  # JOB 1: Build Docker image using BuildKit and upload TAR
-  # ---------------------------------------------------------
   build_image:
     runs-on: ubuntu-latest
     steps:
@@ -30,9 +27,6 @@ jobs:
           name: built-image
           path: image.tar
 
-  # ---------------------------------------------------------
-  # JOB 2: Download TAR → Load → Tag → Push to JFrog
-  # ---------------------------------------------------------
   push_image:
     runs-on: ubuntu-latest
     needs: build_image
@@ -48,10 +42,9 @@ jobs:
         run: |
           loaded_output=$(docker load --input image.tar)
           echo "$loaded_output"
-          
-          # Extract image name (example: myapp:latest)
+
           IMAGE_NAME=$(echo "$loaded_output" | grep -oP '(?<=Loaded image: ).*')
-          
+
           echo "Detected image name: $IMAGE_NAME"
           echo "image_name=$IMAGE_NAME" >> $GITHUB_OUTPUT
 
