@@ -12,6 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Log in to JFrog Docker registry
+        run: |
+         docker login ${{ secrets.JF_DOCKER_URL }} -u ${{ secrets.JFROG_USERNAME }} --password ${{ secrets.JFROG_PASSWORD }}
       - name: Create Buildx builder
         run: docker buildx create --use
 
