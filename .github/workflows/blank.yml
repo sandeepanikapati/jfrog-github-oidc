@@ -41,7 +41,7 @@ jobs:
 
       - name: Log in to JFrog Docker registry
         run: |
-          docker login hts2-girigithub-oci-local1.jfrog.io \
+          docker login hts2-girigithub-oci-local.jfrog.io \
             -u ${{ secrets.JFROG_USERNAME }} \
             --password ${{ secrets.JFROG_PASSWORD }}
 
@@ -55,7 +55,7 @@ jobs:
         id: push_canonical
         run: |
           SOURCE_IMAGE="${{ steps.load_image.outputs.image_name }}"
-          TARGET_REPO="hts2-girigithub-oci-local1.jfrog.io/myapp"
+          TARGET_REPO="hts2-girigithub-oci-local.jfrog.io/myapp"
           CANONICAL_TAG="$TARGET_REPO:v1.2.3-linux-amd64"
 
           echo "Pushing canonical tag: $CANONICAL_TAG"
@@ -68,7 +68,7 @@ jobs:
 
       - name: Create additional tags pointing to SAME digest (latest, stable)
         run: |
-          TARGET_REPO="hts2-girigithub-oci-local1.jfrog.io/myapp"
+          TARGET_REPO="hts2-girigithub-oci-local.jfrog.io/myapp"
           DIGEST="${{ steps.push_canonical.outputs.digest }}"
 
           echo "Using manifest digest: $DIGEST"
