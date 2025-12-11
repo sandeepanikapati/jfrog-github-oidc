@@ -55,7 +55,7 @@ jobs:
         id: push_canonical
         run: |
           SOURCE_IMAGE="${{ steps.load_image.outputs.image_name }}"
-          TARGET_REPO="hts2-girigithub-oci-local.jfrog.io/ociimage"
+          TARGET_REPO="hts2-girigithub-oci-local.jfrog.io/myapp"
           CANONICAL_TAG="$TARGET_REPO:v1.2.3-linux-amd64"
 
           echo "Pushing canonical tag: $CANONICAL_TAG"
