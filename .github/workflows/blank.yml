@@ -1,4 +1,4 @@
-name: Build and Push Image (Deterministic Digest)
+name: Build and Push Image
 
 on:
   push:
