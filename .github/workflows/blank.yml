@@ -41,7 +41,7 @@ jobs:
 
       - name: Log in to JFrog Docker registry
         run: |
-          docker login ${{ secrets.JF_DOCKER_URL }} \
+          docker login hts2-girigithub-oci-local1.jfrog.io \
             -u ${{ secrets.JFROG_USERNAME }} \
             --password ${{ secrets.JFROG_PASSWORD }}
 
