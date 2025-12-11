@@ -68,7 +68,7 @@ jobs:
 
       - name: Create additional tags pointing to SAME digest (latest, stable)
         run: |
-          TARGET_REPO="hts2-girigithub-oci-local.jfrog.io/ociimage"
+          TARGET_REPO="hts2-girigithub-oci-local.jfrog.io/myapp"
           DIGEST="${{ steps.push_canonical.outputs.digest }}"
 
           echo "Using manifest digest: $DIGEST"
@@ -80,6 +80,6 @@ jobs:
               -u "${{ secrets.JFROG_USERNAME }}:${{ secrets.JFROG_PASSWORD }}" \
               -H "Content-Type: application/vnd.oci.image.manifest.v1+json" \
               --data-binary @<(curl -s -u "${{ secrets.JFROG_USERNAME }}:${{ secrets.JFROG_PASSWORD }}" \
-                "https://${{ secrets.JF_DOCKER_URL }}/v2/ociimage/manifests/${DIGEST}") \
-              "https://${{ secrets.JF_DOCKER_URL }}/v2/ociimage/manifests/${tag}"
+                "https://${{ secrets.JF_DOCKER_URL }}/v2/myapp/manifests/${DIGEST}") \
+              "https://${{ secrets.JF_DOCKER_URL }}/v2/myapp/manifests/${tag}"
           done
