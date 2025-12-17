@@ -75,11 +75,4 @@ jobs:
 
           for tag in latest-linux-amd64 stable-linux-amd64; do
             echo "Creating tag: $tag -> $DIGEST"
-
-            curl -X PUT \
-              -u "${{ secrets.JFROG_USERNAME }}:${{ secrets.JFROG_PASSWORD }}" \
-              -H "Content-Type: application/vnd.oci.image.manifest.v1+json" \
-              --data-binary @<(curl -s -u "${{ secrets.JFROG_USERNAME }}:${{ secrets.JFROG_PASSWORD }}" \
-                "https://${{ secrets.JF_DOCKER_URL }}/v2/myapp/manifests/${DIGEST}") \
-              "https://${{ secrets.JF_DOCKER_URL }}/v2/myapp/manifests/${tag}"
           done
