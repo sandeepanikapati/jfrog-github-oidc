@@ -66,13 +66,3 @@ jobs:
           DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$CANONICAL_TAG" | cut -d'@' -f2)
           echo "digest=$DIGEST" >> $GITHUB_OUTPUT
 
-      - name: Create additional tags pointing to SAME digest (latest, stable)
-        run: |
-          TARGET_REPO="hts2-girigithub-oci-local.jfrog.io/myapp"
-          DIGEST="${{ steps.push_canonical.outputs.digest }}"
-
-          echo "Using manifest digest: $DIGEST"
-
-          for tag in latest-linux-amd64 stable-linux-amd64; do
-            echo "Creating tag: $tag -> $DIGEST"
-          done
