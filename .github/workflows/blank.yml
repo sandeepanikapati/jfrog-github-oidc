@@ -41,7 +41,7 @@ jobs:
 
       - name: Log in to JFrog Docker registry
         run: |
-          docker login hts2-girigithub-oci-local.jfrog.io \
+          docker login hts2-girigithub-oci-local2.jfrog.io \
             -u ${{ secrets.JFROG_USERNAME }} \
             --password ${{ secrets.JFROG_PASSWORD }}
 
@@ -55,7 +55,7 @@ jobs:
         id: push_canonical
         run: |
           SOURCE_IMAGE="${{ steps.load_image.outputs.image_name }}"
-          TARGET_REPO="hts2-girigithub-oci-local.jfrog.io/myapp"
+          TARGET_REPO="hts2-girigithub-oci-local2.jfrog.io/myapp"
           CANONICAL_TAG="$TARGET_REPO:v1.2.3-linux-amd64"
 
           echo "Pushing canonical tag: $CANONICAL_TAG"
