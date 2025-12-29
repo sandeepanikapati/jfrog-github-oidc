@@ -14,8 +14,6 @@ jobs:
 
       - name: Install Docker 20.10.24
         run: |
-          sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
-
           sudo apt-get update
           sudo apt-get install -y ca-certificates curl gnupg lsb-release
 
@@ -28,17 +26,20 @@ jobs:
             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
           sudo apt-get update
-          sudo apt-get install -y \
+          sudo apt-get install -y --allow-downgrades \
             docker-ce=5:20.10.24~3-0~ubuntu-jammy \
             docker-ce-cli=5:20.10.24~3-0~ubuntu-jammy \
             containerd.io
+
+          # Lock the version to avoid accidental upgrades
+          sudo apt-mark hold docker-ce docker-ce-cli
 
           docker version
 
       - name: Create Buildx builder
         run: docker buildx create --use
 
-      - name: Build Docker image and export tar
+      - name: Build Docker image using BuildKit and export tar
         run: |
           docker buildx build \
             --platform linux/amd64 \
@@ -47,7 +48,7 @@ jobs:
             -t myapp:latest \
             --output type=docker,dest=./image.tar .
 
-      - name: Upload image tar
+      - name: Upload image tar as artifact
         uses: actions/upload-artifact@v4
         with:
           name: built-image
@@ -64,7 +65,6 @@ jobs:
 
       - name: Install Docker 20.10.24
         run: |
-          sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
           sudo apt-get update
           sudo apt-get install -y ca-certificates curl gnupg lsb-release
 
@@ -77,27 +77,35 @@ jobs:
             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
           sudo apt-get update
-          sudo apt-get install -y \
+          sudo apt-get install -y --allow-downgrades \
             docker-ce=5:20.10.24~3-0~ubuntu-jammy \
             docker-ce-cli=5:20.10.24~3-0~ubuntu-jammy \
             containerd.io
 
+          sudo apt-mark hold docker-ce docker-ce-cli
+
           docker version
 
-      - name: Log in to JFrog
+      - name: Log in to JFrog Docker registry
         run: |
           docker login hts2-girigithub-oci-local.jfrog.io \
             -u ${{ secrets.JFROG_USERNAME }} \
             --password ${{ secrets.JFROG_PASSWORD }}
 
-      - name: Load image
+      - name: Load Docker image from tar
         id: load_image
         run: |
           docker load --input image.tar
           echo "image_name=myapp:latest" >> $GITHUB_OUTPUT
 
-      - name: Tag & Push
+      - name: Tag & Push canonical tag
         run: |
-          TARGET="hts2-girigithub-oci-local.jfrog.io/myapp:v1.2.3-linux-amd64"
-          docker tag myapp:latest "$TARGET"
-          docker push "$TARGET"
+          SOURCE_IMAGE="${{ steps.load_image.outputs.image_name }}"
+          TARGET_REPO="hts2-girigithub-oci-local.jfrog.io/myapp"
+          CANONICAL_TAG="$TARGET_REPO:v1.2.3-linux-amd64"
+
+          docker tag "$SOURCE_IMAGE" "$CANONICAL_TAG"
+          docker push "$CANONICAL_TAG"
+
+          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$CANONICAL_TAG" | cut -d'@' -f2)
+          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
