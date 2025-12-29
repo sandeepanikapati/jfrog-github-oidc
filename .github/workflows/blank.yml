@@ -8,7 +8,7 @@ on:
 
 jobs:
   build_image:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
@@ -17,24 +17,20 @@ jobs:
           sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
 
           sudo apt-get update
-          sudo apt-get install -y \
-            ca-certificates \
-            curl \
-            gnupg \
-            lsb-release
+          sudo apt-get install -y ca-certificates curl gnupg lsb-release
 
           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker.gpg
 
           echo \
             "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker.gpg] \
             https://download.docker.com/linux/ubuntu \
-            $(lsb_release -cs) stable" | \
+            jammy stable" | \
             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
           sudo apt-get update
           sudo apt-get install -y \
-            docker-ce=5:20.10.24~3-0~ubuntu-$(lsb_release -cs) \
-            docker-ce-cli=5:20.10.24~3-0~ubuntu-$(lsb_release -cs) \
+            docker-ce=5:20.10.24~3-0~ubuntu-jammy \
+            docker-ce-cli=5:20.10.24~3-0~ubuntu-jammy \
             containerd.io
 
           docker version
@@ -42,7 +38,7 @@ jobs:
       - name: Create Buildx builder
         run: docker buildx create --use
 
-      - name: Build Docker image using BuildKit and export tar
+      - name: Build Docker image and export tar
         run: |
           docker buildx build \
             --platform linux/amd64 \
@@ -51,14 +47,14 @@ jobs:
             -t myapp:latest \
             --output type=docker,dest=./image.tar .
 
-      - name: Upload image tar as artifact
+      - name: Upload image tar
         uses: actions/upload-artifact@v4
         with:
           name: built-image
           path: image.tar
 
   push_image:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: build_image
     steps:
       - uses: actions/download-artifact@v4
@@ -69,51 +65,39 @@ jobs:
       - name: Install Docker 20.10.24
         run: |
           sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
-
           sudo apt-get update
-          sudo apt-get install -y \
-            ca-certificates \
-            curl \
-            gnupg \
-            lsb-release
+          sudo apt-get install -y ca-certificates curl gnupg lsb-release
 
           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker.gpg
 
           echo \
             "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker.gpg] \
             https://download.docker.com/linux/ubuntu \
-            $(lsb_release -cs) stable" | \
+            jammy stable" | \
             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
           sudo apt-get update
           sudo apt-get install -y \
-            docker-ce=5:20.10.24~3-0~ubuntu-$(lsb_release -cs) \
-            docker-ce-cli=5:20.10.24~3-0~ubuntu-$(lsb_release -cs) \
+            docker-ce=5:20.10.24~3-0~ubuntu-jammy \
+            docker-ce-cli=5:20.10.24~3-0~ubuntu-jammy \
             containerd.io
 
           docker version
 
-      - name: Log in to JFrog Docker registry
+      - name: Log in to JFrog
         run: |
           docker login hts2-girigithub-oci-local.jfrog.io \
             -u ${{ secrets.JFROG_USERNAME }} \
             --password ${{ secrets.JFROG_PASSWORD }}
 
-      - name: Load Docker image from tar
+      - name: Load image
         id: load_image
         run: |
           docker load --input image.tar
           echo "image_name=myapp:latest" >> $GITHUB_OUTPUT
 
-      - name: Tag & Push canonical tag
-        id: push_canonical
+      - name: Tag & Push
         run: |
-          SOURCE_IMAGE="${{ steps.load_image.outputs.image_name }}"
-          TARGET_REPO="hts2-girigithub-oci-local.jfrog.io/myapp"
-          CANONICAL_TAG="$TARGET_REPO:v1.2.3-linux-amd64"
-
-          docker tag "$SOURCE_IMAGE" "$CANONICAL_TAG"
-          docker push "$CANONICAL_TAG"
-
-          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$CANONICAL_TAG" | cut -d'@' -f2)
-          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
+          TARGET="hts2-girigithub-oci-local.jfrog.io/myapp:v1.2.3-linux-amd64"
+          docker tag myapp:latest "$TARGET"
+          docker push "$TARGET"
