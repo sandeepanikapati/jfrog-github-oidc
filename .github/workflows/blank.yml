@@ -12,6 +12,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Docker 20.10.24
+        run: |
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
+
+          sudo apt-get update
+          sudo apt-get install -y \
+            ca-certificates \
+            curl \
+            gnupg \
+            lsb-release
+
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker.gpg
+
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker.gpg] \
+            https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | \
+            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+          sudo apt-get update
+          sudo apt-get install -y \
+            docker-ce=5:20.10.24~3-0~ubuntu-$(lsb_release -cs) \
+            docker-ce-cli=5:20.10.24~3-0~ubuntu-$(lsb_release -cs) \
+            containerd.io
+
+          docker version
+
       - name: Create Buildx builder
         run: docker buildx create --use
 
@@ -39,9 +66,36 @@ jobs:
           name: built-image
           path: .
 
+      - name: Install Docker 20.10.24
+        run: |
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
+
+          sudo apt-get update
+          sudo apt-get install -y \
+            ca-certificates \
+            curl \
+            gnupg \
+            lsb-release
+
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker.gpg
+
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker.gpg] \
+            https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | \
+            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+          sudo apt-get update
+          sudo apt-get install -y \
+            docker-ce=5:20.10.24~3-0~ubuntu-$(lsb_release -cs) \
+            docker-ce-cli=5:20.10.24~3-0~ubuntu-$(lsb_release -cs) \
+            containerd.io
+
+          docker version
+
       - name: Log in to JFrog Docker registry
         run: |
-          docker login hts2-girigithub-oci-local2.jfrog.io \
+          docker login hts2-girigithub-oci-local.jfrog.io \
             -u ${{ secrets.JFROG_USERNAME }} \
             --password ${{ secrets.JFROG_PASSWORD }}
 
@@ -55,14 +109,11 @@ jobs:
         id: push_canonical
         run: |
           SOURCE_IMAGE="${{ steps.load_image.outputs.image_name }}"
-          TARGET_REPO="hts2-girigithub-oci-local2.jfrog.io/myapp"
+          TARGET_REPO="hts2-girigithub-oci-local.jfrog.io/myapp"
           CANONICAL_TAG="$TARGET_REPO:v1.2.3-linux-amd64"
 
-          echo "Pushing canonical tag: $CANONICAL_TAG"
           docker tag "$SOURCE_IMAGE" "$CANONICAL_TAG"
           docker push "$CANONICAL_TAG"
 
-          # Extract digest
           DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$CANONICAL_TAG" | cut -d'@' -f2)
           echo "digest=$DIGEST" >> $GITHUB_OUTPUT
-
